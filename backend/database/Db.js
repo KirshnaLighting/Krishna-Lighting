@@ -6,7 +6,7 @@ const connectDB = async () => {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       ssl: true,
-      tlsAllowInvalidCertificates: false,
+      tls: true, 
     });
     console.log('MongoDB connected');
   } catch (err) {
