@@ -4,23 +4,28 @@ const cors = require("cors");
 const DB = require("./database/Db");
 const app = express();
 const cookieParser = require("cookie-parser");
-const trackViews = require('./middleware/analytic');
+const trackViews = require("./middleware/analytic");
+app.use(
+  cors({
+    origin: "https://krishna-lighting.onrender.com",
+    credentials: true, // if you use cookies or auth headers
+  })
+);
 
-app.use(cors());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 // Import Routes
 const ProductRouter = require("./routes/product.routes");
-const authRoutes = require('./routes/user.routes');
-const cartRoutes = require('./routes/cart.routes');
-const orderRoutes = require('./routes/order.routes');
-const dashboardRoutes = require('./routes/dashboardstats.routes');
+const authRoutes = require("./routes/user.routes");
+const cartRoutes = require("./routes/cart.routes");
+const orderRoutes = require("./routes/order.routes");
+const dashboardRoutes = require("./routes/dashboardstats.routes");
 
 // Route middlewares
 app.use(trackViews);
-app.use('/api/auth', authRoutes);
+app.use("/api/auth", authRoutes);
 app.use("/api/products", ProductRouter);
 app.use("/api/cart", cartRoutes);
 app.use("/api/orders", orderRoutes);
