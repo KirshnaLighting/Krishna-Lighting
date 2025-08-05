@@ -8,7 +8,7 @@ const trackViews = require("./middleware/analytic");
 app.use(
   cors({
     origin: "https://krishna-lighting.onrender.com",
-    credentials: true, // if you use cookies or auth headers
+    credentials: true, 
   })
 );
 
