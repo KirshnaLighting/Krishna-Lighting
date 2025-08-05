@@ -132,7 +132,7 @@ exports.forgotPassword = async (req, res, next) => {
     });
 
     // Create reset URL
-    const resetUrl = `http://localhost:5173/reset-password/${resetToken}`;
+    const resetUrl = `https://krishna-lighting.onrender.com/reset-password/${resetToken}`;
 
     await sendEmail({
       email: user.email,
