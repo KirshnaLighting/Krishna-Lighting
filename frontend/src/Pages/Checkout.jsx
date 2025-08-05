@@ -31,7 +31,7 @@ const CheckoutPage = () => {
     const fetchCart = async () => {
       try {
         setLoading(true);
-        const response = await fetch('http://localhost:5000/api/cart', {
+        const response = await fetch('https://krishna-lighting-backend.onrender.com/api/cart', {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('krishnaLightingToken')}`
           }
@@ -141,7 +141,7 @@ const CheckoutPage = () => {
         totalAmount: orderSummary.total
       };
 
-      const response = await fetch('http://localhost:5000/api/orders', {
+      const response = await fetch('https://krishna-lighting-backend.onrender.com/api/orders', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -157,7 +157,7 @@ const CheckoutPage = () => {
       }
 
       // Clear cart after successful order
-      await fetch('http://localhost:5000/api/cart/clear', {
+      await fetch('https://krishna-lighting-backend.onrender.com/api/cart/clear', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

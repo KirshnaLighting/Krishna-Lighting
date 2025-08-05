@@ -1,36 +1,35 @@
-require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-const DB = require("./database/Db");
-const app = express();
 const cookieParser = require("cookie-parser");
 const trackViews = require("./middleware/analytic");
+require("dotenv").config();
+const DB = require("./database/Db");
+const app = express();
+
+// ✅ CORS middleware must come before any routes
 app.use(
   cors({
-    origin: "https://krishna-lighting.onrender.com",
-    credentials: true, 
+    origin: "https://krishna-lighting.onrender.com", // Your frontend domain
+    credentials: true, // Allow cookies and auth headers
   })
 );
 
+// Middlewares
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// Import Routes
-const ProductRouter = require("./routes/product.routes");
-const authRoutes = require("./routes/user.routes");
-const cartRoutes = require("./routes/cart.routes");
-const orderRoutes = require("./routes/order.routes");
-const dashboardRoutes = require("./routes/dashboardstats.routes");
-
-// Route middlewares
+// Custom Middleware
 app.use(trackViews);
-app.use("/api/auth", authRoutes);
-app.use("/api/products", ProductRouter);
-app.use("/api/cart", cartRoutes);
-app.use("/api/orders", orderRoutes);
-app.use("/api/", dashboardRoutes);
 
+// Routes
+app.use("/api/auth", require("./routes/user.routes"));
+app.use("/api/products", require("./routes/product.routes"));
+app.use("/api/cart", require("./routes/cart.routes"));
+app.use("/api/orders", require("./routes/order.routes"));
+app.use("/api/", require("./routes/dashboardstats.routes"));
+
+// Start server
 DB()
   .then(() => {
     app.listen(process.env.PORT, () => {
