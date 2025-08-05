@@ -25,7 +25,7 @@ const Customers = () => {
         try {
             setLoading(true);
             setError(null);
-            const response = await fetch('http://localhost:5000/api/auth/users', {
+            const response = await fetch('https://krishna-lighting-backend.onrender.com/api/auth/users', {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
                 }

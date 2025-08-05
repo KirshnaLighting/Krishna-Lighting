@@ -16,7 +16,7 @@ const OrderConfirmationPage = () => {
       try {
         setLoading(true);
         const token = localStorage.getItem('krishnaLightingToken');
-        const response = await fetch(`http://localhost:5000/api/orders/${orderId}`, {
+        const response = await fetch(`https://krishna-lighting-backend.onrender.com/api/orders/${orderId}`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }

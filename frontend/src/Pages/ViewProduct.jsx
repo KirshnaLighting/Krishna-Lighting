@@ -27,7 +27,7 @@ const ProductView = () => {
     const getProduct = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`http://localhost:5000/api/products/${id}`);
+        const response = await fetch(`https://krishna-lighting-backend.onrender.com/api/products/${id}`);
         const data = await response.json();
         setProduct(data);
 
@@ -70,7 +70,7 @@ const ProductView = () => {
         price: getCurrentPrice()
       };
 
-      const response = await fetch('http://localhost:5000/api/cart', {  // Changed endpoint from '/ad' to '/add'
+      const response = await fetch('https://krishna-lighting-backend.onrender.com/api/cart', {  // Changed endpoint from '/ad' to '/add'
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

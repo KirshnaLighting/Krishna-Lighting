@@ -20,7 +20,7 @@ const KrishnaLightingProducts = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/products');
+      const response = await fetch('https://krishna-lighting-backend.onrender.com/api/products');
       if (!response.ok) {
         throw new Error('Failed to fetch products');
       }
@@ -73,7 +73,7 @@ const KrishnaLightingProducts = () => {
         price
       };
 
-      const response = await fetch('http://localhost:5000/api/cart/', {
+      const response = await fetch('https://krishna-lighting-backend.onrender.com/api/cart/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

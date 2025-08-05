@@ -30,7 +30,7 @@ const ProfilePage = () => {
         const fetchProfile = async () => {
             try {
                 setLoading(true);
-                const response = await fetch('http://localhost:5000/api/auth/profile', {
+                const response = await fetch('https://krishna-lighting-backend.onrender.com/api/auth/profile', {
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem('krishnaLightingToken')}`
                     }
@@ -76,7 +76,7 @@ const ProfilePage = () => {
         const fetchOrders = async () => {
             try {
                 setOrdersLoading(true);
-                const response = await fetch('http://localhost:5000/api/orders/myorders', {
+                const response = await fetch('https://krishna-lighting-backend.onrender.com/api/orders/myorders', {
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem('krishnaLightingToken')}`
                     }
@@ -163,7 +163,7 @@ const ProfilePage = () => {
 
         try {
             setUpdating(true);
-            const response = await fetch('http://localhost:5000/api/auth/profile', {
+            const response = await fetch('https://krishna-lighting-backend.onrender.com/api/auth/profile', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

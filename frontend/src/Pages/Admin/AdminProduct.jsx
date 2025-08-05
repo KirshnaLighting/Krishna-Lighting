@@ -6,7 +6,7 @@ import {
   Image as ImageIcon, X, Check, AlertTriangle, Battery, Menu
 } from 'lucide-react';
 import AdminSidebar from '../../components/Admin/AdminSidebar';
-const API_URL = 'http://localhost:5000/api/products';
+const API_URL = 'https://krishna-lighting-backend.onrender.com/api/products';
 
 const getStockStatus = (quantity, threshold) => {
   if (quantity <= 0) return 'out-of-stock';

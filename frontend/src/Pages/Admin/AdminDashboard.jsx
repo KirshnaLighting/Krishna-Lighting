@@ -23,9 +23,9 @@ const Dashboard = () => {
 
         // Fetch all data in parallel
         const [statsRes, ordersRes, productsRes] = await Promise.all([
-          fetch('http://localhost:5000/api/dashboard-stats'),
-          fetch('http://localhost:5000/api/recent-orders'),
-          fetch('http://localhost:5000/api/top-products')
+          fetch('https://krishna-lighting-backend.onrender.com/api/dashboard-stats'),
+          fetch('https://krishna-lighting-backend.onrender.com/api/recent-orders'),
+          fetch('https://krishna-lighting-backend.onrender.com/api/top-products')
         ]);
 
         if (!statsRes.ok || !ordersRes.ok || !productsRes.ok) {

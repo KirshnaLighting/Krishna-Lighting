@@ -16,7 +16,7 @@ const Orders = () => {
     useEffect(() => {
         const fetchOrders = async () => {
             try {
-                const response = await axios.get('http://localhost:5000/api/orders', {
+                const response = await axios.get('https://krishna-lighting-backend.onrender.com/api/orders', {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`
                     }
@@ -107,7 +107,7 @@ const Orders = () => {
     const updateOrderStatus = async (orderId, newStatus) => {
         try {
             const response = await axios.put(
-                `http://localhost:5000/api/orders/${orderId}/status`,
+                `https://krishna-lighting-backend.onrender.com/api/orders/${orderId}/status`,
                 { status: newStatus },
                 {
                     headers: {
