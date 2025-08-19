@@ -8,7 +8,8 @@ const {
   resetPassword,
   getProfile,
   updateProfile,
-  getAllUsers
+  getAllUsers,
+  resendOtp
 } = require("../controllers/user.controller");
 
 const { protect } = require("../middleware/authMiddleware");
