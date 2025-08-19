@@ -271,3 +271,51 @@ exports.getAllUsers = async (req, res, next) => {
     next(err);
   }
 };
+
+exports.resendOtp = async (req, res, next) => {
+  const { email } = req.body;
+
+  try {
+    // Check if user exists
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found with this email",
+      });
+    }
+
+    // If already verified, no need to resend OTP
+    if (user.isVerified) {
+      return res.status(400).json({
+        success: false,
+        message: "Account already verified",
+      });
+    }
+
+    // Generate new OTP
+    const otp = generateOTP();
+
+    // Upsert OTP (replace old one if exists)
+    await Otp.findOneAndUpdate(
+      { email },
+      { otp },
+      { upsert: true, new: true }
+    );
+
+    // Send OTP email
+    await sendEmail({
+      email,
+      subject: "Krishna Lighting - OTP Verification (Resent)",
+      message: `Your OTP for account verification is ${otp}. It will expire in 10 minutes.`,
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "OTP resent to your email",
+      data: { email },
+    });
+  } catch (err) {
+    next(err);
+  }
+};

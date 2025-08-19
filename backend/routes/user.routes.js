@@ -22,5 +22,6 @@ router.put("/reset-password/:token", resetPassword);
 router.get("/profile", protect, getProfile);
 router.put("/profile", protect, updateProfile);
 router.get("/users", getAllUsers);
+router.get("/resend-otp", resendOtp);
 
 module.exports = router;
