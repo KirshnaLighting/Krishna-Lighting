@@ -64,7 +64,7 @@ const SignupForm = () => {
         phone: formData.phone,
         password: formData.password
       });
-
+      console.log(response)
       if (response.data.success) {
         setStep(2);
         setMessage('OTP sent to your email and phone');
