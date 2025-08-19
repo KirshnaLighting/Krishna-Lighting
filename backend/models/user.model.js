@@ -33,22 +33,18 @@ const userSchema = new mongoose.Schema({
   address: {
     street: {
       type: String,
-      required: [true, 'Please add a street address'],
       trim: true
     },
     city: {
       type: String,
-      required: [true, 'Please add a city'],
       trim: true
     },
     state: {
       type: String,
-      required: [true, 'Please add a state'],
       trim: true
     },
     zipCode: {
       type: String,
-      required: [true, 'Please add a ZIP code'],
       match: [/^\d{5,6}$/, 'Please add a valid ZIP code'],
       trim: true
     }
