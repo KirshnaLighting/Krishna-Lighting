@@ -21,7 +21,7 @@ const AddToCart = () => {
     'SAVE10': { discount: 10, type: 'percentage', minOrder: 5000 },
     'FLAT500': { discount: 500, type: 'fixed', minOrder: 3000 },
     'NEWUSER': { discount: 15, type: 'percentage', minOrder: 2000 },
-    'SPECIAL20': { discount: 20, type: 'percentage', minOrder: 1000 } // Added 20% promo code
+    'SPECIAL20': { discount: 20, type: 'percentage', minOrder: 1000 }
   };
 
   useEffect(() => {
@@ -166,8 +166,13 @@ const AddToCart = () => {
     navigate('/checkout');
   };
 
+  // Calculate discounted price for each item (20% off)
+  const calculateDiscountedPrice = (price) => {
+    return price * 0.8; // 20% discount
+  };
+
   // Calculate order summary values
-  const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const subtotal = cartItems.reduce((sum, item) => sum + (calculateDiscountedPrice(item.price) * item.quantity), 0);
   const shipping = subtotal >= 2000 ? 0 : 199;
 
   let discount = 0;
@@ -177,11 +182,9 @@ const AddToCart = () => {
       : appliedPromo.discount;
   }
 
-  // Apply 20% discount if subtotal is greater than 3000
-  const specialDiscount = subtotal > 3000 ? (subtotal * 20) / 100 : 0;
-  
-  const total = subtotal - discount - specialDiscount + shipping;
+  const total = subtotal - discount + shipping;
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+  const totalDiscount = cartItems.reduce((sum, item) => sum + ((item.price * 0.2) * item.quantity), 0);
 
   if (!user) {
     return (
@@ -286,6 +289,7 @@ const AddToCart = () => {
                   const variant = item.product.variants?.[0] || {};
                   const isOutOfStock = variant.stock?.status === 'out-of-stock';
                   const image = item.product.image || 'https://via.placeholder.com/300';
+                  const discountedPrice = calculateDiscountedPrice(item.price);
 
                   return (
                     <div key={item._id} className="bg-white rounded-lg shadow-sm p-6">
@@ -324,14 +328,19 @@ const AddToCart = () => {
                           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                             {/* Price */}
                             <div className="flex items-center gap-2">
-                              <span className="text-xl font-bold text-slate-900">
-                                ₹{item.price.toLocaleString()}
-                              </span>
-                              {subtotal > 3000 && (
-                                <span className="text-green-600 font-semibold">
-                                  (20% off applied)
+                              <div className="flex flex-col">
+                                <span className="text-xl font-bold text-slate-900">
+                                  ₹{discountedPrice.toLocaleString()}
                                 </span>
-                              )}
+                                <div className="flex items-center gap-2">
+                                  <span className="text-sm text-gray-500 line-through">
+                                    ₹{item.price.toLocaleString()}
+                                  </span>
+                                  <span className="text-green-600 text-sm font-semibold">
+                                    (20% off)
+                                  </span>
+                                </div>
+                              </div>
                             </div>
 
                             {/* Quantity Controls */}
@@ -430,17 +439,15 @@ const AddToCart = () => {
                       <span className="font-semibold">₹{subtotal.toLocaleString()}</span>
                     </div>
 
+                    <div className="flex justify-between text-green-600">
+                      <span>Item Discount (20% off)</span>
+                      <span className="font-semibold">-₹{totalDiscount.toLocaleString()}</span>
+                    </div>
+
                     {appliedPromo && (
                       <div className="flex justify-between text-green-600">
                         <span>Promo discount ({appliedPromo.code})</span>
                         <span className="font-semibold">-₹{discount.toLocaleString()}</span>
-                      </div>
-                    )}
-
-                    {subtotal > 3000 && (
-                      <div className="flex justify-between text-green-600">
-                        <span>Special Discount (20% off)</span>
-                        <span className="font-semibold">-₹{specialDiscount.toLocaleString()}</span>
                       </div>
                     )}
 
@@ -458,15 +465,6 @@ const AddToCart = () => {
                       </div>
                     </div>
                   </div>
-
-                  {subtotal <= 3000 && (
-                    <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                      <div className="flex items-center gap-2 text-blue-800 text-sm">
-                        <Gift size={16} />
-                        <span>Add ₹{(3001 - subtotal).toLocaleString()} more to get 20% off</span>
-                      </div>
-                    </div>
-                  )}
 
                   {shipping > 0 && (
                     <div className="mb-6 p-3 bg-amber-50 border border-amber-200 rounded-lg">
