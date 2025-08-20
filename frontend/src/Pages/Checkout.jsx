@@ -14,6 +14,7 @@ const CheckoutPage = () => {
   const [placingOrder, setPlacingOrder] = useState(false);
   const [orderSummary, setOrderSummary] = useState({
     subtotal: 0,
+    discount: 0,
     shipping: 0,
     total: 0,
     itemsCount: 0
@@ -44,13 +45,16 @@ const CheckoutPage = () => {
         const data = await response.json();
         setCartItems(data.cart.items || []);
 
-        // Calculate order summary
+        // Calculate order summary with 20% discount
         const subtotal = data.cart.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-        const shipping = subtotal >= 2000 ? 0 : 199;
-        const total = subtotal + shipping;
+        const discount = subtotal * 0.2; // 20% discount
+        const discountedSubtotal = subtotal - discount;
+        const shipping = discountedSubtotal >= 2000 ? 0 : 199;
+        const total = discountedSubtotal + shipping;
 
         setOrderSummary({
           subtotal,
+          discount,
           shipping,
           total,
           itemsCount: data.cart.items.reduce((sum, item) => sum + item.quantity, 0)
@@ -112,7 +116,7 @@ const CheckoutPage = () => {
 
     try {
       console.log(cartItems)
-      // Prepare order items data
+      // Prepare order items data with discounted prices
       const items = cartItems.map(item => ({
         product: item.product._id,
         variantIndex: item.variantIndex,
@@ -120,7 +124,8 @@ const CheckoutPage = () => {
         bodyColor: item.bodyColor,
         priceType: item.priceType,
         quantity: item.quantity,
-        price: item.price,
+        price: item.price * 0.8, // Apply 20% discount to each item
+        originalPrice: item.price, // Store original price for reference
         name: item.product.name,
         wattage: item.product.variant.watt
       }));
@@ -137,6 +142,7 @@ const CheckoutPage = () => {
         },
         paymentMethod: 'COD',
         subtotal: orderSummary.subtotal,
+        discount: orderSummary.discount,
         shippingFee: orderSummary.shipping,
         totalAmount: orderSummary.total
       };
@@ -342,18 +348,27 @@ const CheckoutPage = () => {
                       const productName = item.product?.name || "Product";
                       const variant = item.product?.variants?.[item.variantIndex] || {};
                       const wattage = variant.wattage || "";
-                      const price = item.price || 0;
+                      const originalPrice = item.price || 0;
+                      const discountedPrice = originalPrice * 0.8; // 20% discount
                       const quantity = item.quantity || 1;
 
                       return (
-                        <div key={index} className="flex justify-between items-center border-b pb-3">
-                          <div>
-                            <p className="font-medium">{productName}</p>
-                            <p className="text-sm text-gray-600">
-                              {wattage && `${wattage} • `}Qty: {quantity}
-                            </p>
+                        <div key={index} className="border-b pb-3">
+                          <div className="flex justify-between items-center">
+                            <div>
+                              <p className="font-medium">{productName}</p>
+                              <p className="text-sm text-gray-600">
+                                {wattage && `${wattage} • `}Qty: {quantity}
+                              </p>
+                            </div>
+                            <div className="text-right">
+                              <span className="font-medium">₹{(discountedPrice * quantity).toLocaleString()}</span>
+                              <div className="flex items-center gap-2 text-sm text-gray-500">
+                                <span className="line-through">₹{(originalPrice * quantity).toLocaleString()}</span>
+                                <span className="text-green-600 font-medium">20% off</span>
+                              </div>
+                            </div>
                           </div>
-                          <span className="font-medium">₹{(price * quantity).toLocaleString()}</span>
                         </div>
                       );
                     })}
@@ -362,6 +377,11 @@ const CheckoutPage = () => {
                   <div className="flex justify-between">
                     <span className="text-gray-600">Subtotal ({orderSummary.itemsCount} items)</span>
                     <span className="font-medium">₹{orderSummary.subtotal.toLocaleString()}</span>
+                  </div>
+
+                  <div className="flex justify-between text-green-600">
+                    <span>Discount (20%)</span>
+                    <span className="font-medium">-₹{orderSummary.discount.toLocaleString()}</span>
                   </div>
 
                   <div className="flex justify-between">
