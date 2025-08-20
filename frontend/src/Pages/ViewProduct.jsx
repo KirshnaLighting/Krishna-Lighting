@@ -60,6 +60,9 @@ const ProductView = () => {
     try {
       setAddingToCart(true);
 
+      // Apply 20% discount to the cart price
+      const discountedPrice = getCurrentPrice() * 0.8;
+
       const cartItem = {
         productId: id,
         variantIndex: selectedVariant,
@@ -67,10 +70,10 @@ const ProductView = () => {
         bodyColor: selectedBodyColor,
         priceType: selectedPriceType,
         quantity,
-        price: getCurrentPrice()
+        price: discountedPrice
       };
 
-      const response = await fetch('https://krishna-lighting-backend.onrender.com/api/cart', {  // Changed endpoint from '/ad' to '/add'
+      const response = await fetch('https://krishna-lighting-backend.onrender.com/api/cart', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -116,7 +119,7 @@ const ProductView = () => {
     }
   };
 
-  const getCurrentPrice = () => {
+  const getOriginalPrice = () => {
     const price = currentVariant?.price;
     switch (selectedPriceType) {
       case 'threeInOne': return price?.threeInOne || 0;
@@ -124,6 +127,12 @@ const ProductView = () => {
       case 'custom': return price?.custom || 0;
       default: return price?.threeInOne || 0;
     }
+  };
+
+  // Apply 20% discount to get current price
+  const getCurrentPrice = () => {
+    const originalPrice = getOriginalPrice();
+    return originalPrice * 0.8; // 20% discount
   };
 
   const getStockStatus = () => currentVariant?.stock?.status;
@@ -179,6 +188,8 @@ const ProductView = () => {
   }
 
   const currentVariant = product.variants[selectedVariant];
+  const originalPrice = getOriginalPrice();
+  const discountedPrice = getCurrentPrice();
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -363,7 +374,17 @@ const ProductView = () => {
             <div className="bg-white rounded-lg p-6 shadow-lg">
               <div className="flex items-center justify-between mb-4">
                 <div>
-                  <div className="text-3xl font-bold text-slate-900">₹{getCurrentPrice()?.toLocaleString()}</div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-3xl font-bold text-slate-900">₹{discountedPrice?.toLocaleString()}</span>
+                    {originalPrice > discountedPrice && (
+                      <span className="text-lg text-gray-500 line-through">₹{originalPrice?.toLocaleString()}</span>
+                    )}
+                  </div>
+                  {originalPrice > discountedPrice && (
+                    <div className="text-sm text-green-600 mt-1">
+                      You save ₹{(originalPrice - discountedPrice).toLocaleString()} (20% off)
+                    </div>
+                  )}
                   <div className="text-sm text-gray-600 mt-1">
                     {selectedPriceType === 'custom' && `${selectedColorTemp} • `}
                     {currentVariant.watt} • {product.bodyColour}
