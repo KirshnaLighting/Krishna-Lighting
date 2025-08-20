@@ -64,13 +64,16 @@ const KrishnaLightingProducts = () => {
 
       const variant = product.variants[variantIndex] || {};
       const price = variant.price?.threeInOne || 0;
+      
+      // Apply 20% discount to the cart price
+      const discountedPrice = price * 0.8;
 
       const cartItem = {
         productId,
         variantIndex,
         priceType: 'threeInOne',
         quantity: 1,
-        price
+        price: discountedPrice
       };
 
       const response = await fetch('https://krishna-lighting-backend.onrender.com/api/cart/', {
@@ -103,13 +106,16 @@ const KrishnaLightingProducts = () => {
   const transformedProducts = useMemo(() => {
     return products.map(product => {
       const firstVariant = product.variants[0] || {};
+      const originalPrice = firstVariant.price?.threeInOne || 0;
+      // Apply 20% discount to all products
+      const discountedPrice = originalPrice * 0.8;
       const firstImage = firstVariant.images?.[0]?.url || 'https://via.placeholder.com/400';
 
       return {
         id: product._id,
         name: product.productName,
-        price: firstVariant.price?.threeInOne || 0,
-        originalPrice: (firstVariant.price?.threeInOne || 0) * 1.2,
+        price: discountedPrice,
+        originalPrice: originalPrice,
         image: firstImage,
         rating: 4.5,
         reviews: 10,
@@ -185,6 +191,12 @@ const KrishnaLightingProducts = () => {
                 className="bg-white text-slate-900 p-3 rounded-full hover:bg-amber-400 hover:text-white transition-colors"
               >
                 <Eye size={20} />
+              </button>
+              <button 
+                onClick={() => handleAddToCart(product.id)}
+                className="bg-white text-slate-900 p-3 rounded-full hover:bg-amber-400 hover:text-white transition-colors"
+              >
+                <ShoppingCart size={20} />
               </button>
             </div>
           </div>
@@ -278,6 +290,12 @@ const KrishnaLightingProducts = () => {
                 className="bg-slate-100 hover:bg-slate-200 p-2 rounded-lg transition-colors"
               >
                 <Eye size={20} className="text-slate-600" />
+              </button>
+              <button 
+                onClick={() => handleAddToCart(product.id)}
+                className="bg-slate-100 hover:bg-slate-200 p-2 rounded-lg transition-colors"
+              >
+                <ShoppingCart size={20} className="text-slate-600" />
               </button>
             </div>
           </div>
