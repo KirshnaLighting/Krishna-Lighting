@@ -64,7 +64,6 @@ const SignupForm = () => {
         phone: formData.phone,
         password: formData.password
       });
-      console.log(response)
       if (response.data.success) {
         setStep(2);
         setMessage('OTP sent to your email and phone');
@@ -92,6 +91,7 @@ const SignupForm = () => {
         otp
       });
 
+      console.log(response)
       if (response.data.success) {
         setMessage('Account created successfully! Redirecting...');
 
@@ -117,7 +117,7 @@ const SignupForm = () => {
     setMessage('');
 
     try {
-      const response = await axios.post(`${API_BASE_URL}/api/auth/resend-otp`, {
+      const response = await axios.post(`${API_BASE_URL}/resend-otp`, {
         email: formData.email
       });
 
