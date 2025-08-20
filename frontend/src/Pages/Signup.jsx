@@ -66,7 +66,7 @@ const SignupForm = () => {
       });
       if (response.data.success) {
         setStep(2);
-        setMessage('OTP sent to your email and phone');
+        setMessage('OTP sent to your email');
       } else {
         throw new Error(response.data.message || 'Failed to send OTP');
       }
@@ -97,7 +97,7 @@ const SignupForm = () => {
 
         // Store token in localStorage
         localStorage.setItem('krishnaLightingToken', response.data.token);
-        localStorage.setItem('user', JSON.stringify(data.data));
+        localStorage.setItem('user', JSON.stringify(response.data.data));
 
         setTimeout(() => {
           navigate('/products');
