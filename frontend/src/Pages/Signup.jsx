@@ -91,10 +91,11 @@ const SignupForm = () => {
         otp
       });
 
-      console.log(response)
       if (response.data.success) {
         setMessage('Account created successfully! Redirecting...');
 
+        console.log(response.data.data)
+        console.log(response.data.token)
         // Store token in localStorage
         localStorage.setItem('krishnaLightingToken', response.data.token);
         localStorage.setItem('user', JSON.stringify(response.data.data));
