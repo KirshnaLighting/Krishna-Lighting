@@ -20,9 +20,9 @@ const AddToCart = () => {
   const promoCodes = {
     'SAVE10': { discount: 10, type: 'percentage', minOrder: 5000 },
     'FLAT500': { discount: 500, type: 'fixed', minOrder: 3000 },
-    'NEWUSER': { discount: 15, type: 'percentage', minOrder: 2000 }
+    'NEWUSER': { discount: 15, type: 'percentage', minOrder: 2000 },
+    'SPECIAL20': { discount: 20, type: 'percentage', minOrder: 1000 } // Added 20% promo code
   };
-
 
   useEffect(() => {
     const fetchCart = async () => {
@@ -177,7 +177,10 @@ const AddToCart = () => {
       : appliedPromo.discount;
   }
 
-  const total = subtotal - discount + shipping;
+  // Apply 20% discount if subtotal is greater than 3000
+  const specialDiscount = subtotal > 3000 ? (subtotal * 20) / 100 : 0;
+  
+  const total = subtotal - discount - specialDiscount + shipping;
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
   if (!user) {
@@ -324,6 +327,11 @@ const AddToCart = () => {
                               <span className="text-xl font-bold text-slate-900">
                                 ₹{item.price.toLocaleString()}
                               </span>
+                              {subtotal > 3000 && (
+                                <span className="text-green-600 font-semibold">
+                                  (20% off applied)
+                                </span>
+                              )}
                             </div>
 
                             {/* Quantity Controls */}
@@ -406,7 +414,7 @@ const AddToCart = () => {
                   )}
 
                   <div className="mt-3 text-sm text-gray-600">
-                    <p>Available codes: SAVE10, FLAT500, NEWUSER</p>
+                    <p>Available codes: SAVE10, FLAT500, NEWUSER, SPECIAL20</p>
                   </div>
                 </div>
               </div>
@@ -429,6 +437,13 @@ const AddToCart = () => {
                       </div>
                     )}
 
+                    {subtotal > 3000 && (
+                      <div className="flex justify-between text-green-600">
+                        <span>Special Discount (20% off)</span>
+                        <span className="font-semibold">-₹{specialDiscount.toLocaleString()}</span>
+                      </div>
+                    )}
+
                     <div className="flex justify-between">
                       <span className="text-gray-600">Shipping</span>
                       <span className={`font-semibold ${shipping === 0 ? 'text-green-600' : ''}`}>
@@ -444,6 +459,15 @@ const AddToCart = () => {
                     </div>
                   </div>
 
+                  {subtotal <= 3000 && (
+                    <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                      <div className="flex items-center gap-2 text-blue-800 text-sm">
+                        <Gift size={16} />
+                        <span>Add ₹{(3001 - subtotal).toLocaleString()} more to get 20% off</span>
+                      </div>
+                    </div>
+                  )}
+
                   {shipping > 0 && (
                     <div className="mb-6 p-3 bg-amber-50 border border-amber-200 rounded-lg">
                       <div className="flex items-center gap-2 text-amber-800 text-sm">
@@ -452,6 +476,7 @@ const AddToCart = () => {
                       </div>
                     </div>
                   )}
+                  
                   <button
                     onClick={handleCheckout}
                     disabled={cartItems.some(item => {
