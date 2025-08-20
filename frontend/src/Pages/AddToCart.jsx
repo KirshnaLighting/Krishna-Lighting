@@ -378,54 +378,6 @@ const AddToCart = () => {
                     </div>
                   );
                 })}
-
-                {/* Promo Code */}
-                <div className="bg-white rounded-lg shadow-sm p-6">
-                  <h3 className="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
-                    <Tag size={20} className="text-amber-600" />
-                    Promo Code
-                  </h3>
-
-                  {appliedPromo ? (
-                    <div className="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-lg">
-                      <div className="flex items-center gap-2">
-                        <Check size={16} className="text-green-600" />
-                        <span className="font-semibold text-green-800">{appliedPromo.code}</span>
-                        <span className="text-green-600">
-                          - ₹{appliedPromo.type === 'percentage'
-                            ? Math.round((subtotal * appliedPromo.discount) / 100)
-                            : appliedPromo.discount}
-                        </span>
-                      </div>
-                      <button
-                        onClick={removePromoCode}
-                        className="text-green-600 hover:text-green-800 text-sm font-medium"
-                      >
-                        Remove
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="flex gap-3">
-                      <input
-                        type="text"
-                        placeholder="Enter promo code"
-                        value={promoCode}
-                        onChange={(e) => setPromoCode(e.target.value)}
-                        className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-                      />
-                      <button
-                        onClick={applyPromoCode}
-                        className="bg-amber-600 hover:bg-amber-700 text-white px-6 py-2 rounded-lg font-semibold transition-colors"
-                      >
-                        Apply
-                      </button>
-                    </div>
-                  )}
-
-                  <div className="mt-3 text-sm text-gray-600">
-                    <p>Available codes: SAVE10, FLAT500, NEWUSER, SPECIAL20</p>
-                  </div>
-                </div>
               </div>
 
               {/* Order Summary */}
@@ -443,13 +395,6 @@ const AddToCart = () => {
                       <span>Item Discount (20% off)</span>
                       <span className="font-semibold">-₹{totalDiscount.toLocaleString()}</span>
                     </div>
-
-                    {appliedPromo && (
-                      <div className="flex justify-between text-green-600">
-                        <span>Promo discount ({appliedPromo.code})</span>
-                        <span className="font-semibold">-₹{discount.toLocaleString()}</span>
-                      </div>
-                    )}
 
                     <div className="flex justify-between">
                       <span className="text-gray-600">Shipping</span>
