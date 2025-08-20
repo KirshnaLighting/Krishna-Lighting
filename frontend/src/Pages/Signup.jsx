@@ -117,7 +117,7 @@ const SignupForm = () => {
     setMessage('');
 
     try {
-      const response = await axios.post(`${API_BASE_URL}/resend-otp`, {
+      const response = await axios.post(`${API_BASE_URL}/api/auth/resend-otp`, {
         email: formData.email
       });
 
